@@ -1,9 +1,9 @@
-POST http://localhost:3000/save
-Content-Type: application/json
+# POST http://localhost:3000/save
+# Content-Type: application/json
 
-{
-    "message": "till mig som är så cool"
-}
+# {
+#     "message": "jag hatar"
+# }
 
 # POST http://localhost:3000/flag
 # Content-Type: application/json
@@ -14,3 +14,5 @@ Content-Type: application/json
 # }
 
 //GET http://localhost:3000/getall
+
+GET http://localhost:3000/get?id=000

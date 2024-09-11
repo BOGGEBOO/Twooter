@@ -15,6 +15,9 @@ connectToDatabase(config, () => {
     db = getDatabaseConnection()
 });
 
+// TODO öppna connection till mongodb i varje route, checka med en try-catch om mongo inte nås
+// TODO skydd mot injections med https://www.npmjs.com/package/express-mongo-sanitize
+
 async function insert(message_text){
     let doc = { message: `${message_text}`, _id:  randomId(5, 'aA0'), read: false}
     await db.collection('messages').insertOne(doc)
@@ -94,6 +97,7 @@ app.use('/flag', (req, res) => {
     }
 });
 
+//app.get hanterar inte implicit 405 errors
 
 app.use('/get', async (req, res) => {
     if (req.method !== 'GET') res.status(405).send("metoden är FEEEEEEEEEEL");
@@ -127,12 +131,11 @@ app.listen(port, () => {
     console.log(`App is running, visit http://localhost:${port}`);
 })
 
-// app.all('*', (req, res) => {
+// app.all('/*', (req, res) => {
 //     res.status(404).send('Sidan finns inte, u stooooopid beanana');
 //   });
-  
 
-app.use((req, res, next) => {
-    res.status(500).send("Hoppsan hejsan, nu blev det fel")
-})
+// app.use((req, res, next) => {
+//     res.status(500).send("Hoppsan hejsan, nu blev det fel")
+// })
 

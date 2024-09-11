@@ -1,0 +1,16 @@
+POST http://localhost:3000/save
+Content-Type: application/json
+
+{
+    "message": "till mig som är så cool"
+}
+
+# POST http://localhost:3000/flag
+# Content-Type: application/json
+
+# {
+#     "id": "Y7Dlc",
+#     "read": true
+# }
+
+//GET http://localhost:3000/getall

@@ -2,17 +2,18 @@
 # Content-Type: application/json
 
 # {
-#     "message": "jag hatar"
+#      "message": "frankrike"
 # }
+
 
 # POST http://localhost:3000/flag
 # Content-Type: application/json
 
 # {
-#     "id": "Y7Dlc",
+#     "id": "adpfC",
 #     "read": true
 # }
 
-//GET http://localhost:3000/getall
+GET http://localhost:3000/getall
 
-GET http://localhost:3000/get?id=000
+//GET http://localhost:3000/get?id=FR0JO

@@ -1,7 +1,7 @@
 import express from 'express';
 import randomId from 'random-id';
 import { MongoClient } from 'mongodb';
-import { connectToDatabase, closeDatabaseConnection, getDatabaseConnection } from './mongo.js'
+import sanitize from 'mongo-sanitize';
 
 const app = express();
 
@@ -12,47 +12,6 @@ let config = {
 
 let uri = "mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.3.1"
 
-
-// let db
-// connectToDatabase(config, () => {
-//     console.log('Connected!')
-//     db = getDatabaseConnection()
-// });
-
-// TODO öppna connection till mongodb i varje route, checka med en try-catch om mongo inte nås
-// TODO skydd mot injections med https://www.npmjs.com/package/express-mongo-sanitize
-
-// async function insert(message_text){
-//     let doc = { message: `${message_text}`, _id:  randomId(5, 'aA0'), read: false}
-//     await db.collection('messages').insertOne(doc)
-//     console.log('1 message has been inserted')
-// }
-// async function read(db, message_id){
-//     let doc = await db.collection('messages').findOne({'_id' : message_id})
-//     console.log(`Found: ${JSON.stringify(doc, null, 2)}`) // pretty output
-//     return doc 
-// }
-
-// async function update(message_id, status){
-//     await db.collection('messages').updateOne(
-//         {_id: message_id},
-//         {
-//             $set: {read: status }
-//         }
-//     );
-// }
-
-// async function find_all(){
-//     let doc = await db.collection('messages')
-//     .find({})
-//     .toArray((err, result) => {
-//         if (err) throw err;
-//         return result;
-//     })
-//     console.log('All messages have been found')
-//     // console.log(doc)
-//     return doc
-// }
 let bad_words = ["järnspikar", "fan", "helvete", "tusan", "stockholm", "danmark", "frankrike",
  "Oliver", "cringe", "tdts04"]
 function validate(text){
@@ -83,7 +42,7 @@ app.use('/save', async (req, res) => {
 
         if (req.method !== 'POST') res.status(405).send("metoden är FEEEEEEEEEEL");
         else {
-            let message_text = req.body.message;
+            let message_text = sanitize(req.body.message);
             if (!validate(message_text)){
                 res.status(200).send("Dåligt meddelande")
             }
@@ -91,7 +50,6 @@ app.use('/save', async (req, res) => {
                 let doc = { message: `${message_text}`, _id:  randomId(5, 'aA0'), read: false}
                 await db.collection('messages').insertOne(doc)
                 console.log('1 message has been inserted')
-                //insert(message);
                 res.status(200).send()
             }
         } 
@@ -110,14 +68,19 @@ app.use('/flag', async (req, res) => {
         else {
             let message_id = req.body.id;
             let status = req.body.read;
-            await db.collection('messages').updateOne(
+            let update_status = await db.collection('messages').updateOne(
                 {_id: message_id},
                 {
                     $set: {read: status }
                 }
             );
-            //update(message_id, status);
-            res.status(200).send()
+            if (update_status.matchedCount !== 1){
+                res.status(400).send("Felaktigt id!")
+            }
+            else{
+                res.status(200).send()
+
+            }
         }
     } catch(err){
         console.log(err)
@@ -143,7 +106,6 @@ app.use('/get', async (req, res) => {
                 return doc
             }
             let found_message = await find_message()
-            //let found_message = await read(message_id);
             if (found_message === null) {
                 res.status(400).send("felaktigt id!")
             }
@@ -173,11 +135,9 @@ app.use('/getall', async (req, res) => {
                     return result;
                 })
                 console.log('All messages have been found')
-                // console.log(doc)
                 return doc
             }
             let messages = await get_messages()
-            //let messages = await find_all()
             console.log(messages)
             res.send(messages)  
         }
@@ -196,11 +156,5 @@ app.listen(port, () => {
     console.log(`App is running, visit http://localhost:${port}`);
 })
 
-// app.all('/*', (req, res) => {
-//     res.status(404).send('Sidan finns inte, u stooooopid beanana');
-//   });
 
-// app.use((req, res, next) => {
-//     res.status(500).send("Hoppsan hejsan, nu blev det fel")
-// })
-
+export default app

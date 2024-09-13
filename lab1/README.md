@@ -7,7 +7,12 @@ There should be a `README.md` with instructions for running and configuring each
 ### Usage
 Run the code using:
 ```bash
-...
+node app.js
 ```
 
-Then visit ... in a browaser
+Then visit http://localhost:3000 in a browser
+
+Run the tests using: 
+```bash
+test // will start the mocha testing
+```

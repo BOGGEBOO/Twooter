@@ -10,6 +10,7 @@ let config = {
     db: 'lab1'
 }
 
+//replace the string with own connection string
 let uri = "mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.3.1"
 
 let bad_words = ["järnspikar", "fan", "helvete", "tusan", "stockholm", "danmark", "frankrike",

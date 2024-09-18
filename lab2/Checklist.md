@@ -1,0 +1,19 @@
+- [] Ett meddelande ska kunna skrivas i ett textfält och publiceras med en knapp.
+- [] Innan meddelandet publiceras ska det valideras med JavaScript. Om meddelandet är tomt eller innehåller mer än 140 tecken ska det inte publiceras. Istället ska ett felmeddelande ska visas för användaren.
+- [] Felmeddelanden ska presenteras på lämpligt sätt (se illustrationen nedan). Användande av alert() är inte en godkänd lösning.
+- [] Publicerade meddelanden ska visas i **kronologiskt ordning** med nya meddelanden överst. Meddelandena ska separeras tydligt och ska presenteras tillsammans med författarens namn och en lämpligt formulerad tidsstämpel.
+- [] Publicerade meddelanden ska ha en knapp som vid klick markerar/avmarkerar ett meddelande som läst/oläst Skillnaden mellan lästa och olästa meddelanden ska vara tydlig (se illustrationen nedan).
+- [] Labben ska visa att ni behärskar HTML och CSS. Alla element ska därför placeras på lämpligt sätt i förhållande till varande med lämplig justering av komponenter i höjd- och breddled samt väl valda avstånd mellan komponenter. Använd gärna exempelvis **How to Design a Website: 7 Key Principles for visually appealing websites** och **Create better CSS forms with these design principles** som inspiration.
+- [] **Bootstrap** ska användas för att ändra utseende på textrutan och knappar.
+- [] Laborationen ska göras med HTML5, CSS och ren JavaScript (inga JavaScript-bibliotek får användas i denna labb).
+- [] Kontrollera att er HTML-kod validerar innan inlämning (ex. **https://validator.w3.org/**). Moderna webbläsare är mycket förlåtande när det gäller syntaxfel så det är inte säkert att eventuella fel faktiskt märks på er hemsida.
+---
+- [] Användaren ska kunna använda sidan precis som i del 1 med skillnaden att meddelandena laddas in från databasen när sidan laddas om.
+- [] När ett meddelandes läggs till ska endast nödvändiga delar av gränssnittet uppdateras.
+- [] När ett meddelandes status ändras ska endast nödvändiga delar av gränssnittet uppdateras.
+- [] Cookies behöver inte användas i labben.
+- [] Meddelanden och deras status som visas för användaren ska reflektera datan som finns i MongoDB. Meddelanden som inte sparats i databasen ska heller inte synas på sidan.
+- [] Klienten ska hantera all kommunikation med servern via AJAX och använda sig av CORS.
+- [] Tester liknande de som implementerades i labb 2 ska även finnas för denna labb. Beskriv även hur ni testar stöd för CORS om ni inte inkluderat det i de automatiska testerna.
+- [] Anrop ska valideras på på klient- och serversidan.
+- [x] Informationen i databasen ska finnas kvar om servern startas om.

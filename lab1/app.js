@@ -54,6 +54,7 @@ app.use('/save', async (req, res) => {
                 res.status(200).send()
             }
         } 
+        client.close()
     } catch(err) {
         console.log(err)
         res.status(500).send()
@@ -67,7 +68,7 @@ app.use('/flag', async (req, res) => {
 
         if (req.method !== 'POST') res.status(405).send("metoden är FEEEEEEEEEEL");
         else {
-            let message_id = req.body.id;
+            let message_id = sanitize(req.body.id);
             let status = req.body.read;
             let update_status = await db.collection('messages').updateOne(
                 {_id: message_id},
@@ -83,6 +84,7 @@ app.use('/flag', async (req, res) => {
 
             }
         }
+        client.close()
     } catch(err){
         console.log(err)
         res.status(500).send()
@@ -99,7 +101,7 @@ app.use('/get', async (req, res) => {
 
         if (req.method !== 'GET') res.status(405).send("metoden är FEEEEEEEEEEL");
         else {
-            let message_id = req.query.id;
+            let message_id = sanitize(req.query.id);
             console.log(message_id);
             let find_message = async () => {
                 let doc = await db.collection('messages').findOne({'_id' : message_id})
@@ -114,6 +116,7 @@ app.use('/get', async (req, res) => {
                 res.send(found_message)
             }
         }
+        client.close()
     } catch(err){
         console.log(err)
         res.status(500).send()
@@ -142,6 +145,7 @@ app.use('/getall', async (req, res) => {
             console.log(messages)
             res.send(messages)  
         }
+        client.close()
     } catch(err){
         console.log(err)
         res.status(500).send()

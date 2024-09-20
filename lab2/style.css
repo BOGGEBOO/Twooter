@@ -1,0 +1,12 @@
+.ul {
+    list-style-type: none;
+}
+
+
+#test {
+    border-style: solid;
+}
+
+#checkbox {
+    padding-left: 1200px;    /* float: right; */
+}

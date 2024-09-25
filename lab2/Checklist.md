@@ -1,4 +1,4 @@
-- [ ] Ett meddelande ska kunna skrivas i ett textfält och publiceras med en knapp.
+- [x] Ett meddelande ska kunna skrivas i ett textfält och publiceras med en knapp.
 - [x] Innan meddelandet publiceras ska det valideras med JavaScript. Om meddelandet är tomt eller innehåller mer än 140 tecken ska det inte publiceras. Istället ska ett felmeddelande ska visas för användaren.
 - [ ] Felmeddelanden ska presenteras på lämpligt sätt (se illustrationen nedan). Användande av alert() är inte en godkänd lösning.
 - [ ] Publicerade meddelanden ska visas i **kronologiskt ordning** med nya meddelanden överst. Meddelandena ska separeras tydligt och ska presenteras tillsammans med författarens namn och en lämpligt formulerad tidsstämpel.

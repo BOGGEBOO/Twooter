@@ -2,6 +2,7 @@ import express from 'express';
 import randomId from 'random-id';
 import { MongoClient } from 'mongodb';
 import sanitize from 'mongo-sanitize';
+import cors from 'cors';
 
 const app = express();
 
@@ -31,6 +32,12 @@ app.use((req, res, next) => {
     console.log(`Visiting route ${req.path}`);
     next();
 })
+
+// Use CORS middleware
+app.use(cors({
+    origin: 'http://127.0.0.1:7777/' // Allow only this origin
+  }));
+  
 
 app.use(express.static('public', {
     maxAge: 5000 // how long should express cache each document?
@@ -124,7 +131,7 @@ app.use('/get', async (req, res) => {
     
 });
 
-app.use('/getall', async (req, res) => {
+app.use('/getall', cors(), async (req, res) => {
     try{
         let client = new MongoClient(uri)
         let db = client.db('lab1')

@@ -35,7 +35,8 @@ app.use((req, res, next) => {
 
 // Use CORS middleware
 app.use(cors({
-    origin: 'http://127.0.0.1:7777/' // Allow only this origin
+    origin: 'http://127.0.0.1:5500', // Allow only this origin
+    methods: ['GET', 'POST']
   }));
   
 
@@ -43,11 +44,11 @@ app.use(express.static('public', {
     maxAge: 5000 // how long should express cache each document?
 }));
 
-app.use('/save', async (req, res) => {
+app.use('/save', cors(), async (req, res) => {
     try {
         let client = new MongoClient(uri)
         let db = client.db('lab1')
-
+        
         if (req.method !== 'POST') res.status(405).send("metoden är FEEEEEEEEEEL");
         else {
             let message_text = sanitize(req.body.message);
@@ -55,7 +56,9 @@ app.use('/save', async (req, res) => {
                 res.status(200).send("Dåligt meddelande")
             }
             else{
-                let doc = { message: `${message_text}`, _id:  randomId(5, 'aA0'), read: false}
+                
+                let doc = { message: `${message_text}`, _id:  randomId(5, 'aA0'), read: false, date: new Date()}
+                
                 await db.collection('messages').insertOne(doc)
                 console.log('1 message has been inserted')
                 res.status(200).send()

@@ -53,15 +53,17 @@ app.use('/save', cors(), async (req, res) => {
         else {
             let message_text = sanitize(req.body.message);
             if (!validate(message_text)){
-                res.status(200).send("Dåligt meddelande")
+                res.status(418).send(JSON.stringify("Dåligt meddelande"))
             }
             else{
                 
-                let doc = { message: `${message_text}`, _id:  randomId(5, 'aA0'), read: false, date: new Date()}
+                let message_id = randomId(5, 'aA0')
+                let doc = { message: `${message_text}`, _id:  message_id, read: false, date: Date.now()}
                 
                 await db.collection('messages').insertOne(doc)
                 console.log('1 message has been inserted')
-                res.status(200).send()
+                //res.json({_id: message_id})
+                res.status(200).send(JSON.stringify(message_id))
             }
         } 
         client.close()

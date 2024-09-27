@@ -2,11 +2,11 @@
     list-style-type: none;
 }
 
-
-#test {
-    border-style: solid;
+.col2 {
+    max-width: 40px;    /* float: right; */
 }
 
-#checkbox {
-    padding-left: 1200px;    /* float: right; */
+#BadMessage {
+    color: red;
+    padding-left: 10px;
 }

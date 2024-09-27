@@ -17,15 +17,32 @@ async function postMessage(new_message) {
     let data = {
         message: new_message
     }
-    let status = await fetch('http://localhost:3000/save', {
+    let response = await fetch('http://localhost:3000/save', {
         method: 'POST', 
         mode: 'cors',
         headers: headers, 
         body: JSON.stringify(data)
-    }).then(response => response.json())
-    .then((responseJson) => console.log(responseJson))
-  .catch((err) => console.log(err))
-    return status
+    })
+    .then(response => response.json().then(data => ({status: response.status, body: data})))
+    .catch((err) => console.log(err))
+    return response
+}
+
+async function flagMessage(id, read) {
+    let headers = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',                                                                                                
+    }
+    let data = {
+        id: id, 
+        read: read
+    }
+    let response = await fetch('http://localhost:3000/flag', {
+        method: 'POST', 
+        mode: 'cors',
+        headers: headers, 
+        body: JSON.stringify(data)
+    })
 }
 
 async function postButton() {
@@ -35,14 +52,22 @@ async function postButton() {
     }
     else {
 
-        let status = await postMessage(message)
-        const d = new Date()
-        createListItem(message, d.toDateString())
+        let response = await postMessage(message)
+        console.log(response)
+        if (response.status == 200){
+            const d = new Date()
+            console.log(response.status)
+            createListItem(message, d.toDateString(), response.body, false)
+        }
+        else{
+            document.getElementById('BadMessage').innerHTML = 'Inga fula ord, dumsnut!'
+        }
+        
         
     }
 }
 
-function createListItem(message, date) {
+function createListItem(message, date, id, read) {
     let message_list = document.getElementById("messages_list")
 
     let entry = document.createElement('li')
@@ -56,39 +81,54 @@ function createListItem(message, date) {
     div.appendChild(row)
 
     let col1 = document.createElement('div')
-    // byt ut [namn], titel och [datum] mot faktisk information från messages
-    col1.innerHTML = '<p><small class="text-body-secondary">[name]</small></p> <h4>' + message + '</h4><p><small class="text-body-secondary">' + date + '</small></p>'
+
+    let d = new Date(date)
+    let d2 = d.toLocaleDateString() + " " + d.getHours() + ":" + d.getMinutes()
+    
+    col1.innerHTML = '<p><small class="text-body-secondary">Alex the Great</small></p><input type="hidden" id="id" value="' + id + 
+    '"/> <h4>' + message + '</h4><p><small class="text-body-secondary">Posted at ' + d2 + '</small></p>'
     col1.setAttribute('class', 'col')
     row.appendChild(col1)
 
     let col2 = document.createElement('div')
-    col2.setAttribute('class', 'col')
-    col2.setAttribute('id', 'checkbox')
+    col2.setAttribute('class', 'col col2')
+    // col2.setAttribute('class', 'checkbox')
 
     let checkbox = document.createElement('div')
     checkbox.setAttribute('class', 'form-check')
-    checkbox.innerHTML = '<input class="form-check-input" type="checkbox" value="" id="isRead" onclick="checkBox()"><label class="form-check-label" for="flexCheckDefault"></label>'
+    if (read) {
+        checkbox.innerHTML = '<input class="form-check-input" type="checkbox" value="" id="' + id + 
+        '" onclick="checkBox(this)" checked><label class="form-check-label" for="flexCheckDefault"></label>'
+    }
+    else{
+        checkbox.innerHTML = '<input class="form-check-input" type="checkbox" value="" id="' + id + 
+        '" onclick="checkBox(this)"><label class="form-check-label" for="flexCheckDefault"></label>'
+    }
+    
     
     col2.appendChild(checkbox)
     row.appendChild(col2)
     
-    message_list.appendChild(entry)
+    message_list.insertBefore(entry, message_list.firstChild)
+
 }
 
-function checkBox(){
-    let isChecked = document.getElementById("isRead");
+function checkBox(box){
+    let isChecked = document.getElementById(box.id);
     if (isChecked.checked == true){
-        //is checked, mark unread
+        //is checked, mark read
+        flagMessage(box.id, true)
     }
     else{
-        //no checked, mark read
+        //no checked, mark unread
+        flagMessage(box.id, false)
     }
 }
 
 window.onload = async () => {
     let messages = await getAll()
     for (message of messages){
-        createListItem(message.message, message.date)
+        createListItem(message.message, message.date, message._id, message.read)
     }
-    
+
 }

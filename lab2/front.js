@@ -43,6 +43,7 @@ async function flagMessage(id, read) {
         headers: headers, 
         body: JSON.stringify(data)
     })
+    return response.status
 }
 
 async function postButton() {
@@ -68,12 +69,15 @@ async function postButton() {
 }
 
 function createListItem(message, date, id, read) {
+    console.log(read)
     let message_list = document.getElementById("messages_list")
 
     let entry = document.createElement('li')
 
     let div = document.createElement('div')
     div.setAttribute('class', 'container p-3 my-3 border')
+    div.setAttribute('id', id)
+    
     entry.appendChild(div)
 
     let row = document.createElement('div')
@@ -92,16 +96,16 @@ function createListItem(message, date, id, read) {
 
     let col2 = document.createElement('div')
     col2.setAttribute('class', 'col col2')
-    // col2.setAttribute('class', 'checkbox')
 
     let checkbox = document.createElement('div')
     checkbox.setAttribute('class', 'form-check')
     if (read) {
-        checkbox.innerHTML = '<input class="form-check-input" type="checkbox" value="" id="' + id + 
+        div.classList.add('checked')
+        checkbox.innerHTML = '<input class="form-check-input" type="checkbox" value="" id="c-' + id + 
         '" onclick="checkBox(this)" checked><label class="form-check-label" for="flexCheckDefault"></label>'
     }
     else{
-        checkbox.innerHTML = '<input class="form-check-input" type="checkbox" value="" id="' + id + 
+        checkbox.innerHTML = '<input class="form-check-input" type="checkbox" value="" id="c-' + id + 
         '" onclick="checkBox(this)"><label class="form-check-label" for="flexCheckDefault"></label>'
     }
     
@@ -113,15 +117,21 @@ function createListItem(message, date, id, read) {
 
 }
 
-function checkBox(box){
+
+async function checkBox(box){
     let isChecked = document.getElementById(box.id);
-    if (isChecked.checked == true){
-        //is checked, mark read
-        flagMessage(box.id, true)
+    let splitted = box.id.split('-')
+    let messageBox = document.getElementById(splitted[1])
+    let status = await flagMessage(splitted[1], box.checked)
+    if(status != 200) {
+        return 
+    }
+
+    if (box.checked){
+        messageBox.classList.add('checked')
     }
     else{
-        //no checked, mark unread
-        flagMessage(box.id, false)
+        messageBox.classList.remove('checked')
     }
 }
 

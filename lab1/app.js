@@ -62,7 +62,6 @@ app.use('/save', cors(), async (req, res) => {
                 
                 await db.collection('messages').insertOne(doc)
                 console.log('1 message has been inserted')
-                //res.json({_id: message_id})
                 res.status(200).send(JSON.stringify(message_id))
             }
         } 

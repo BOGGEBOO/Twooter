@@ -10,3 +10,27 @@
     color: red;
     padding-left: 10px;
 }
+
+.checked{
+    background-color: lightgray;
+}
+
+.not-checked {
+    background-color: white;
+}
+
+/* .form-check-input {
+    order: 2;
+}
+
+.container {
+    order: 1;
+} */
+
+/* .div {
+    background-color: white;
+}
+
+input[type="checkbox"]:checked ~ * .div {
+    background-color: lightgrey;
+} */

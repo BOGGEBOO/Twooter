@@ -2,5 +2,37 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
+        <script src="./index.js"></script>
     </head>
+    <body>
+        <form onsubmit="return false"> 
+            <h1> Logga in </h1>
+
+            <label for="username"> Användarnamn </label>
+            <input type="text"
+                   id="username"
+                   name="username"
+                   placeholder="Skriv in ditt användarnamn" required>
+
+            <br>
+            <br>
+
+            <label for="password"> Lösenord </label>
+            <input type="password"
+                   id="password"
+                   name="password"
+                   placeholder="Skriv in ditt lösenord" required>
+
+            <br>
+            <br>
+
+            <input type="submit"
+                   value="Logga in"
+                   onclick="logIn(false)">
+
+            <input type="submit"
+                   value="Skapa konto"
+                   onclick="logIn(true)">
+        </form>
+    </body>
 </html>

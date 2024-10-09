@@ -1,7 +1,7 @@
 ## checklista över projektet
-- [ ] Användare ska kunna registrera sig med användarnamn och lösenord.
+- [x] Användare ska kunna registrera sig med användarnamn och lösenord.
 - [ ] Användare ska kunna logga in och logga ut.
-- [ ] Lösenord ska inte skickas eller sparas som läsbar text.
+- [x] Lösenord ska inte skickas eller sparas som läsbar text.
 
 ---
 

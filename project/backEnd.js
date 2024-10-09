@@ -1,0 +1,100 @@
+import express from 'express';
+import { MongoClient } from 'mongodb';
+import cors from 'cors';
+
+//replace the string with own connection string
+let uri = "mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.3.1"
+
+const app = express();
+
+app.use(express.json());
+
+app.use((req, res, next) => {
+    console.log(`Visiting route ${req.path}`);
+    next();
+})
+
+app.use(cors({
+    origin: 'http://127.0.0.1:5500', // Allow only this origin
+    methods: ['GET', 'POST']
+  }));
+
+app.use(express.static('public', {
+    maxAge: 5000 // how long should express cache each document?
+}));
+
+app.post('/signin', async (req, res) => {
+    
+    try {
+        let client = new MongoClient(uri)
+        let db = client.db('project')
+
+        let data = req.body
+
+        let doc = await db.collection('users').findOne({'name': data.username})
+        if(doc == null){
+            res.status(200).send(JSON.stringify({success: false}))
+        }
+        else{
+            let user = {name: data.username, pwd: data.password}
+            await db.collection('users').insertOne(user)
+            console.log('User created')
+            res.status(200).send(JSON.stringify({success: true}))
+        }        
+
+    } catch(err){
+        console.log(err)
+        res.status(500).send(JSON.stringify({success: false}))
+    }
+})
+
+app.post('/login', async (req, res) => {
+    try{
+        let client = new MongoClient(uri)
+        let db = client.db('project')
+
+        let data = req.body
+        let doc = await db.collection('users').findOne({'name': data.username})
+        
+        if(data.password == doc.pwd){
+            res.status(200).send(JSON.stringify({success: true}))
+        }
+        else{
+            res.status(200).send(JSON.stringify({success: false}))
+        }
+
+    }catch(err){
+        console.log(err)
+        res.status(500).send()
+    }
+})
+
+app.get('/getUsers', async (req, res) => {
+    try{
+        let client = new MongoClient(uri)
+        let db = client.db('project')
+
+        let users = await db.collection('users').find({})
+        .toArray((err, result) => {
+            if(err) throw err;
+            return result;
+        })
+        let userNames = []
+        for(const user of users){
+            userNames.push(user['name'])
+        }
+        res.status(200).send(JSON.stringify({userNames: userNames}))
+
+    }catch(err){
+        console.log(err)
+        res.status(500).send()
+    }
+})
+
+
+
+// start listening for request on port 3000
+const port = 3000;
+app.listen(port, () => {
+    console.log(`App is running, visit http://localhost:${port}`);
+})

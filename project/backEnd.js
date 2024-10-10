@@ -32,12 +32,18 @@ app.post('/signin', async (req, res) => {
         let data = req.body
 
         let doc = await db.collection('users').findOne({'name': data.username})
-        if(doc == null){
+        if(doc != null){
             res.status(200).send(JSON.stringify({success: false}))
         }
         else{
-            let user = {name: data.username, pwd: data.password}
+            let user = {
+                name: data.username, 
+                pwd: data.password, 
+                pendingReq: [], 
+                friends: [], 
+            }
             await db.collection('users').insertOne(user)
+            
             console.log('User created')
             res.status(200).send(JSON.stringify({success: true}))
         }        
@@ -53,10 +59,12 @@ app.post('/login', async (req, res) => {
         let client = new MongoClient(uri)
         let db = client.db('project')
 
+
         let data = req.body
         let doc = await db.collection('users').findOne({'name': data.username})
         
         if(data.password == doc.pwd){
+            
             res.status(200).send(JSON.stringify({success: true}))
         }
         else{
@@ -85,6 +93,66 @@ app.get('/getUsers', async (req, res) => {
         }
         res.status(200).send(JSON.stringify({userNames: userNames}))
 
+    }catch(err){
+        console.log(err)
+        res.status(500).send()
+    }
+})
+
+app.post('/sendFriend', async (req, res) => {
+    try{
+        let client = new MongoClient(uri)
+        let db = client.db('project')
+
+        let data = req.body
+        let doc = await db.collection('users').findOne({'name': data.receiver})
+        if(!(data.sender in doc['pendingReq'])) {
+            await db.collection('users').updateOne(
+                {'name': data.receiver},
+                { $push: {'pendingReq': data.sender} }
+            )
+            res.status(200).send(JSON.stringify({success: true}))
+        }
+        else{
+            res.status(200).send(JSON.stringify({success: false}))
+        }
+
+        
+    }catch(err){
+        console.log(err)
+        res.status(500).send()
+    }
+})
+
+app.post('/accFriend', async (req, res) => {
+    try{
+        let client = new MongoClient(uri)
+        let db = client.db('project')
+        
+        let data = req.body
+        
+        await db.collection('users').updateOne(
+            {'name': data.sender},
+            {$push: {'friends': data.receiver}
+        }
+        )
+
+        await db.collection('users').updateOne(
+            {'name': data.sender},
+            {$pull: {'pendingReq': data.receiver}
+        }
+        )
+
+        await db.collection('users').updateOne(
+            {'name': data.receiver},
+            {$push: {'friends': data.sender}}
+        )
+
+        await db.collection('users').updateOne(
+            {'name': data.receiver},
+            {$pull: {'pendingReq': data.sender}}
+        )
+        
     }catch(err){
         console.log(err)
         res.status(500).send()

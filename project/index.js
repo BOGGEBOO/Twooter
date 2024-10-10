@@ -9,40 +9,42 @@
 let currentUser = ''
 let allUsers = []
 
-// Funktioner för inloggning: 
+// "Globala funktioner": 
 
-async function logInBE(userName, passWord, path) {
-    
+async function postFunc(data, path) {
     let headers = {
         'Accept': 'application/json',
         'Content-Type': 'application/json',                                                                                                
     }
-    let user = {
-        username: userName, 
-        password: passWord
-    }
     let url = 'http://localhost:3000/' + path
+    let response = await fetch(url, 
+        {
+            method: 'POST', 
+            mode: 'cors', 
+            headers: headers, 
+            body: JSON.stringify(data)
+        }
+    ).then(response => response.json())
+    .catch(err => console.log('POST: ' + err))
     
-    let response = await fetch(url, {
-        method: 'POST', 
-        mode: 'cors',
-        headers: headers, 
-        body: JSON.stringify(user)
-    }).then(response => response.json())
-    .catch((err) => console.log('l21 '+ err))
-
-    if(response.success) {
-        currentUser = userName
-        allUsers.push(userName)
-    }
-
     return response.success
 }
 
+async function getFunc(path) {
+    let url = 'http://localhost:3000/' + path
+    let response = await fetch(url, 
+        {method: 'GET', mode: 'cors'}
+    ).then((response) => response.json())
+    .catch((err) => console.log(err))
+    return response
+}
+
+// Funktioner för inloggning: 
+
 async function logIn(newUser) {
-    // Om användaren finns sedan innan (eller tror det i alla fall)
     let uNameInput = document.getElementById('username')
     let username = uNameInput.value
+    
 
     let pWordInput = document.getElementById('password')
     let password = pWordInput.value
@@ -53,43 +55,27 @@ async function logIn(newUser) {
     }
 
     encP = window.btoa(password)
-    
-    let success = await logInBE(username, encP, path)
+    let data = {
+        username: username, 
+        password: encP
+    }
 
+    let success = await postFunc(data, path)
+    
     if(!success) {
         // felmeddelande
         // om login: fel användarnamn/lösenord
         // om signin: användarnamnet finns redan
     }
     else {
-        // byt sida
-        window.location = 'profilePage.html'
+        currentUser = username
+        sessionStorage.setItem('currentUser', username)
+        window.location = 'search.html'
     }
 }
 
-async function getUsers() {
-    let users = await fetch('http://localhost:3000/getUsers', 
-                            {method: 'GET', mode: 'cors'}
-                        )
-                    .then((response) => response.json())
-                    .catch((err) => console.log(err))
-    return users.userNames
-}
-
 window.onload = async () => {
-    allUsers = await getUsers()
+    let response = await getFunc('getUsers')
+    allUsers = response.userNames
+    currentUser = sessionStorage.getItem('currentUser')
 }
-
-
-// Funktioner för publicering av meddelanden:
-// sno labb 2
-
-// Funktioner för display av meddelanden/vänner:
-// sno labb 2 (ish)/vue
-
-// Funktioner för att hitta användare: 
-
-// Funktioner för vänförfågningar: 
-
-export default {currentUser, allUsers}
-// export default 

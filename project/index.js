@@ -70,7 +70,8 @@ async function logIn(newUser) {
     else {
         currentUser = username
         sessionStorage.setItem('currentUser', username)
-        window.location = 'search.html'
+        sessionStorage.setItem('visitedProfile', username)
+        window.location = 'profilePage.html'
     }
 }
 

@@ -2,9 +2,29 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <script src="./index.js"></script>
+        <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>  
+        <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+        <script src="./globals.js"></script>
+        <script src="./profilePage.js"></script>
     </head>
     <body>
-        
+        <h1 id="username">Användare</h1>
+        <script>
+            document.getElementById('username').innerHTML = sessionStorage.getItem('currentUser')
+        </script>
+
+        <div class="mb-3">
+            <label class="form-label">Nytt meddelande</label>
+            <input
+                type="text"
+                id="message"
+                class="form-control"
+            />
+        </div>
+        <p id="BadMessage"></p>
+        <button onclick="postMessage()" type="button" id="post-button">POSTNord</button>
+        <hr>
+        <ul class="list-group" id="messageList">
+        </ul>
     </body>
 </html>

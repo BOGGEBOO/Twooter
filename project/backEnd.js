@@ -1,6 +1,8 @@
 import express from 'express';
 import { MongoClient } from 'mongodb';
 import cors from 'cors';
+import sanitize from 'mongo-sanitize';
+
 
 //replace the string with own connection string
 let uri = "mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.3.1"
@@ -30,17 +32,18 @@ app.post('/signin', async (req, res) => {
         let db = client.db('project')
 
         let data = req.body
-
-        let doc = await db.collection('users').findOne({'name': data.username})
+        let username = sanitize(data.username)
+        let doc = await db.collection('users').findOne({'name': username})
         if(doc != null){
             res.status(200).send(JSON.stringify({success: false}))
         }
         else{
             let user = {
-                name: data.username, 
+                name: username, 
                 pwd: data.password, 
                 pendingReq: [], 
                 friends: [], 
+                messages: []
             }
             await db.collection('users').insertOne(user)
             
@@ -61,7 +64,8 @@ app.post('/login', async (req, res) => {
 
 
         let data = req.body
-        let doc = await db.collection('users').findOne({'name': data.username})
+        let username = sanitize(data.username)
+        let doc = await db.collection('users').findOne({'name': username})
         
         if(data.password == doc.pwd){
             
@@ -152,6 +156,22 @@ app.post('/accFriend', async (req, res) => {
             {'name': data.receiver},
             {$pull: {'pendingReq': data.sender}}
         )
+        
+    }catch(err){
+        console.log(err)
+        res.status(500).send()
+    }
+})
+
+app.get('/getMessages', async (req, res) => {
+    try{
+        let client = new MongoClient(uri)
+        let db = client.db('project')
+
+        let data = req.query.name
+        
+        let doc = await db.collection('users').findOne({'name': data})
+        res.status(200).send(JSON.stringify({messages: doc['messages']}))
         
     }catch(err){
         console.log(err)

@@ -21,7 +21,7 @@ async function postFunc(data, path) {
     ).then(response => response.json())
     .catch(err => console.log('POST: ' + err))
     
-    return response.success
+    return response
 }
 
 async function getFunc(path) {

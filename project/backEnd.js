@@ -2,6 +2,7 @@ import express from 'express';
 import { MongoClient } from 'mongodb';
 import cors from 'cors';
 import sanitize from 'mongo-sanitize';
+import randomId from 'random-id';
 
 
 //replace the string with own connection string
@@ -163,6 +164,23 @@ app.post('/accFriend', async (req, res) => {
     }
 })
 
+app.get('/getFriends', async (req, res) => {
+    try{
+        let client = new MongoClient(uri)
+        let db = client.db('project')
+
+        let data = req.query.name
+        console.log(data)
+        let doc = await db.collection('users').findOne({'name': data})
+        res.status(200).send(JSON.stringify({friends: doc['friends']}))
+        
+        
+    }catch(err){
+        console.log(err)
+        res.status(500).send()
+    }
+})
+
 app.get('/getMessages', async (req, res) => {
     try{
         let client = new MongoClient(uri)
@@ -176,6 +194,31 @@ app.get('/getMessages', async (req, res) => {
     }catch(err){
         console.log(err)
         res.status(500).send()
+    }
+})
+
+app.post('/addMessage', async (req, res) => {
+    try{
+        let client = new MongoClient(uri)
+        let db = client.db('project')
+
+        let data = req.body
+        let id = randomId(5, 'aA0')
+        let message = {
+            user: data.poster,
+            message: data.message,
+            id: id,
+            date: Date.now()
+        }
+        await db.collection('users').updateOne(
+            {'name': data.profile},
+            {$push: {'messages': message}}
+        )
+        res.status(200).send(JSON.stringify({id: id, success: true}))
+        
+    }catch(err){
+        console.log(err)
+        res.status(500).send(JSON.stringify({success: false}))
     }
 })
 

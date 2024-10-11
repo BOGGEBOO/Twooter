@@ -61,7 +61,10 @@ async function logIn(newUser) {
     }
 
     let success = await postFunc(data, path)
-    
+    // success = success.success
+
+    // console.log(success)
+
     if(!success) {
         // felmeddelande
         // om login: fel användarnamn/lösenord

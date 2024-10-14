@@ -110,8 +110,9 @@ app.post('/sendFriend', async (req, res) => {
         let db = client.db('project')
 
         let data = req.body
+        console.log(data.sender)
         let doc = await db.collection('users').findOne({'name': data.receiver})
-        if(!(data.sender in doc['pendingReq'])) {
+        if((doc['pendingReq'].includes(data.sender) == false) && (doc['friends'].includes(data.sender) == false)) {
             await db.collection('users').updateOne(
                 {'name': data.receiver},
                 { $push: {'pendingReq': data.sender} }
@@ -215,6 +216,47 @@ app.post('/addMessage', async (req, res) => {
             {$push: {'messages': message}}
         )
         res.status(200).send(JSON.stringify({id: id, success: true}))
+        
+    }catch(err){
+        console.log(err)
+        res.status(500).send(JSON.stringify({success: false}))
+    }
+})
+
+app.get('/findUsers', async (req, res) => {
+    try{
+        let client = new MongoClient(uri)
+        let db = client.db('project')
+
+        let data = req.query.name
+        let re = RegExp(data)
+        let users = await db.collection('users').find({ "name": {$regex: re}})
+        .toArray((err, result) => {
+            if(err) throw err;
+            return result;
+        })
+        let userNames = []
+        for(const user of users){
+            userNames.push(user['name'])
+        }
+        console.log(userNames)
+        res.status(200).send(JSON.stringify({userNames: userNames}))
+
+        
+    }catch(err){
+        console.log(err)
+        res.status(500).send(JSON.stringify({success: false}))
+    }
+})
+
+app.get('/getPending', async (req, res) => {
+    try{
+        let client = new MongoClient(uri)
+        let db = client.db('project')
+
+        let data = req.query.name
+        let doc = await db.collection('users').findOne({'name': data})
+        res.status(200).send(JSON.stringify({reqs: doc['pendingReq']}))
         
     }catch(err){
         console.log(err)

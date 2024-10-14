@@ -1,4 +1,8 @@
 
+function logout(){
+    sessionStorage.clear()
+    window.location = 'index.html'
+}
 
 async function postMessage() {
     let message = document.getElementById('message').value
@@ -58,7 +62,52 @@ function createListItem(message, date, id, poster) {
 }
 
 function createFriendItem(){
+    //TODO skapa vänner
+}
 
+function createAccItem(name){
+    let reqsList = document.getElementById('reqsList')
+
+    let entry = document.createElement('li')
+
+    let div = document.createElement('div')
+    div.setAttribute('class', 'container p-3 my-3 border')
+    div.setAttribute('id', name)
+    
+    entry.appendChild(div)
+
+    let row = document.createElement('div')
+    row.setAttribute('class', 'row justify-content-center align-items-center g-2')
+    div.appendChild(row)
+
+    let col1 = document.createElement('div')
+
+    col1.innerHTML = '<p>' + name + '</p>'
+    col1.setAttribute('class', 'col')
+    row.appendChild(col1)
+
+
+    let col2 = document.createElement('div')
+    col2.setAttribute('class', 'col col2')
+
+    let button = document.createElement('div')
+    button.setAttribute('class', 'form-check')
+    button.innerHTML = '<input class="form-check-input" type="button" value="" id="c-' + name + 
+    '" onclick="acceptReq(' + name + ')">'
+    
+    
+    col2.appendChild(button)
+    row.appendChild(col2)
+    
+    reqsList.insertBefore(entry, reqsList.firstChild)
+}
+
+async function acceptReq(name) {
+    let data = {
+        sender: sessionStorage.getItem('currentUser'),
+        receiver: name.id,
+    }
+    let response = await postFunc(data, 'accFriend')
 }
 
 
@@ -71,4 +120,10 @@ window.onload = async () => {
     console.log(response.messages)
     let friends = await getFuncData(sessionStorage.getItem('visitedProfile'), 'getFriends')
     console.log(friends.friends)
+
+    let pending = await getFuncData(sessionStorage.getItem('visitedProfile'), 'getPending')
+    console.log(pending.reqs)
+    for (req of pending.reqs){
+        createAccItem(req)
+    }
 }

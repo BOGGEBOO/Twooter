@@ -79,7 +79,5 @@ async function logIn(newUser) {
 }
 
 window.onload = async () => {
-    let response = await getFunc('getUsers')
-    allUsers = response.userNames
     currentUser = sessionStorage.getItem('currentUser')
 }

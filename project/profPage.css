@@ -1,0 +1,71 @@
+.navBar {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+    text-align: center;
+    justify-content: space-around;
+}
+
+.navBar li {
+    float: left;
+}
+
+.navBar li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+li a:hover {
+    background-color: #111;
+}
+
+.active {
+    background-color: green;
+}
+.row {
+    width: 100%;
+    display: table;
+}
+.column {
+    float: left;
+    display: table-cell;
+}
+
+html {
+    height: 100%;
+}
+
+.left {
+    width: 50%;
+    padding-right: 10px;
+    border-right: solid;
+}
+
+.middle {
+    padding-left: 15px;
+    width: 20%;
+    padding-right: 10px;
+    /* border-right: solid; */
+}
+
+.right {
+    border-left: solid;
+    height: 100%;
+    padding-left: 15px;
+    width: 20%;
+}
+
+.ul {
+    list-style-type: none;
+    padding-left: 0;
+
+}
+.ul li {
+    padding-left: 10px;
+    border-style: solid;
+}

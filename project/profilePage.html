@@ -4,11 +4,16 @@
         <meta charset="UTF-8">
         <script src="./globals.js"></script>
         <script src="./profilePage.js"></script>
+        <link rel="stylesheet" href="./profPage.css">
     </head>
     <body>
+        <ul class="navBar">
+            <li><a class="active" href="profilePage.html">Start</a></li>
+            <li><a href="search.html">Sök</a></li>
+          </ul>
         <h1 id="username">Användare</h1>
         <script>
-            document.getElementById('username').innerHTML = sessionStorage.getItem('currentUser')
+            document.getElementById('username').innerHTML = sessionStorage.getItem('visitedProfile')
         </script>
 
         <div class="mb-3">
@@ -24,10 +29,19 @@
         <button onclick="window.location='search.html'" type="button">Search</button>
         <button onclick="logout()" type="button">Log out</button>
         <hr>
-        <ul class="list-group" id="messageList">
-        </ul>
-
-        <ul id="friendsList"></ul>
-        <ul id="reqsList"></ul>
+        <div class="row">
+            <div class="column left">
+                <h2>Meddelanden</h2>
+                <ul class="ul" id="messageList"></ul>
+            </div>
+            <div class="column middle">
+                <h2>Vänner</h2>
+                <ul class="ul" id="friendsList"></ul>
+            </div>
+            <div class="column right">
+                <h2>Vänförfrågningar</h2>
+                <ul class="ul" id="reqsList"></ul>
+            </div>
+        </div>
     </body>
 </html>

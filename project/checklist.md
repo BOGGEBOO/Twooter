@@ -29,8 +29,8 @@
 
 - [x] Data ska sparas i en MongoDB-databas.
 - [x] Serversidan ska vara skyddad mot MongoDB-injections.
-- [ ] Testning/kodtäckning av backend ska göras med Mocha/Istanbul.
-- [ ] Alla element ska placeras på lämpligt sätt i förhållande till varande med lämplig justering av komponenter i höjd- och breddled samt väl valda avstånd mellan komponenter.
+- [x] Testning/kodtäckning av backend ska göras med Mocha/Istanbul.
+- [x] Alla element ska placeras på lämpligt sätt i förhållande till varande med lämplig justering av komponenter i höjd- och breddled samt väl valda avstånd mellan komponenter.
 
 ## Olika sidor
 - login-sida (index.html)

@@ -41,3 +41,11 @@ async function getFuncData(data, path) {
     .catch((err) => console.log(err))
     return response
 }
+
+function checkUser() {
+    if(sessionStorage.getItem('visitedProfile') != sessionStorage.getItem('currentUser')) {
+        sessionStorage.setItem('visitedProfile', sessionStorage.getItem('currentUser'))
+    }
+ }
+
+ 

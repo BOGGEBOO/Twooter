@@ -40,66 +40,39 @@ function createListItem(message, date, id, poster) {
     let entry = document.createElement('li')
 
     let div = createDiv('container p-3 my-3 border')
-    // let div = document.createElement('div')
-    // div.setAttribute('class', 'container p-3 my-3 border')
     div.setAttribute('id', id)
     
     entry.appendChild(div)
 
     let row = createDiv('row justify-content-center align-items-center g-2')
-    // let row = document.createElement('div')
-    // row.setAttribute('class', 'row justify-content-center align-items-center g-2')
+    
     div.appendChild(row)
 
     let col1 = createDiv('col')
-    // let col1 = document.createElement('div')
 
     let d = new Date(date)
     let d2 = d.toLocaleDateString() + " " + d.getHours() + ":" + d.getMinutes()
     
     col1.innerHTML = '<p><small class="text-body-secondary">'+ poster +'</small></p><input type="hidden" id="id" value="' + id + 
     '"/> <h4>' + message + '</h4><p><small class="text-body-secondary">Posted at ' + d2 + '</small></p>'
-    // col1.setAttribute('class', 'col')
     row.appendChild(col1)
 
     let col2 = createDiv('col col2')
-    // let col2 = document.createElement('div')
-    // col2.setAttribute('class', 'col col2')
+    
     row.appendChild(col2)
    
     message_list.insertBefore(entry, message_list.firstChild)
-    
-
 }
 
 function createFriendItem(name){
-    //TODO skapa vänner
-    let friendsList = document.getElementById('friendsList')
-    let entry = document.createElement('li')
-
-    let block = createDiv('container p-3 my-3 border')
-    block.setAttribute('id', name)
-
-    entry.appendChild(block)
-
-    let row = createDiv('row justify-content-center align-items-center g-2')
-    block.appendChild(row)
-
-    let col1 = createDiv('col')
-    col1.innerHTML = '<p>' + name + '</p>'
-    row.appendChild(col1)
-
-    let col2 = createDiv('col col2')
-    row.appendChild(col2)
-
-    let button = createDiv('form-check')
-    button.innerHTML = '<input class="form-check-input" type="button" value="" id="c-' + name + 
-    '" onclick="visitFriend(' + name + ')">'
-
-    col2.append(button)
-    
-    friendsList.insertBefore(entry, friendsList.firstChild)
-
+    let list = document.getElementById('list-tab')
+    let entry = document.createElement('a')
+    entry.setAttribute('class', 'list-group-item list-group-item-action')
+    entry.setAttribute('href', 'profilePage.html')
+    entry.setAttribute('onclick', 'visitFriend(' + name + ')')
+    entry.setAttribute('id', name)
+    entry.innerHTML = name
+    list.appendChild(entry)
 }
 
 function visitFriend(name){
@@ -108,47 +81,19 @@ function visitFriend(name){
 }
 
 function createAccItem(name){
-    let reqsList = document.getElementById('reqsList')
-
-    let entry = document.createElement('li')
-
-    let div = document.createElement('div')
-    div.setAttribute('class', 'container p-3 my-3 border')
-    div.setAttribute('id', name)
-    
-    entry.appendChild(div)
-
-    let row = document.createElement('div')
-    row.setAttribute('class', 'row justify-content-center align-items-center g-2')
-    div.appendChild(row)
-
-    let col1 = document.createElement('div')
-
-    col1.innerHTML = '<p>' + name + '</p>'
-    col1.setAttribute('class', 'col')
-    row.appendChild(col1)
-
-
-    let col2 = document.createElement('div')
-    col2.setAttribute('class', 'col col2')
-
-    let button = document.createElement('div')
-    button.setAttribute('class', 'form-check')
-    button.innerHTML = '<input class="form-check-input" type="button" value="" id="c-' + name + 
-    '" onclick="acceptReq(' + name + ')">'
-    
-    
-    col2.appendChild(button)
-    row.appendChild(col2)
-    
-    reqsList.insertBefore(entry, reqsList.firstChild)
+    console.log(name)
+    let list = document.getElementById('list-tab-req')
+    let entry = document.createElement('a')
+    entry.setAttribute('class', 'list-group-item list-group-item-action')
+    entry.setAttribute('onclick', 'acceptReq(' + name + ')')
+    entry.setAttribute('id', name)
+    entry.innerHTML = name
+    list.appendChild(entry)
 }
 
 function removeAccItem(name) {
-    // TODO: ta bort från reqsList när man blivit kompisar
-    let list = document.getElementById('reqsList')
-    let child = document.getElementById(name)
-    list.removeChild(child)
+    let list = document.getElementById('list-tab-req')
+    list.children[name].remove()
 }
 
 async function acceptReq(name) {
@@ -170,20 +115,19 @@ window.onload = async () => {
         createListItem(response.messages[i].message, response.messages[i].date, 
             response.messages[i].id, response.messages[i].user)
     }
-    console.log(response.messages)
     
     if(sessionStorage.getItem('currentUser') == sessionStorage.getItem('visitedProfile')) {
         let friends = await getFuncData(sessionStorage.getItem('visitedProfile'), 'getFriends')
-        console.log(friends.friends)
         
         for (friend of friends.friends){
             createFriendItem(friend)
         }
         let pending = await getFuncData(sessionStorage.getItem('visitedProfile'), 'getPending')
-        console.log(pending.reqs)
         for (req of pending.reqs){
             createAccItem(req)
         }
+    }
+    else {
     }
     
 }

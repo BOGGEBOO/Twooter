@@ -4,13 +4,21 @@
         <meta charset="UTF-8">
         <script src="./globals.js"></script>
         <script src="./profilePage.js"></script>
+        
+        <link rel="stylesheet" 
+            href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" 
+            integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" 
+            crossorigin="anonymous">
+        <link rel="stylesheet" href="./globals.css">
         <link rel="stylesheet" href="./profPage.css">
     </head>
     <body>
         <ul class="navBar">
-            <li><a class="active" href="profilePage.html">Start</a></li>
+            <li><a class="active" href="profilePage.html" onclick="checkUser()">Start</a></li>
             <li><a href="search.html">Sök</a></li>
           </ul>
+
+        <div class="body">
         <h1 id="username">Användare</h1>
         <script>
             document.getElementById('username').innerHTML = sessionStorage.getItem('visitedProfile')
@@ -26,22 +34,26 @@
         </div>
         <p id="BadMessage"></p>
         <button onclick="postMessage()" type="button" id="post-button">POSTNord</button>
-        <button onclick="window.location='search.html'" type="button">Search</button>
-        <button onclick="logout()" type="button">Log out</button>
+        <button onclick="logout()" type="button">Logga ut</button>
         <hr>
-        <div class="row">
-            <div class="column left">
+        <div class="flex-row row">
+            <div class="col-md left">
                 <h2>Meddelanden</h2>
                 <ul class="ul" id="messageList"></ul>
             </div>
-            <div class="column middle">
+            <div class="col-md middle">
                 <h2>Vänner</h2>
+                <p>Klicka på en vän i listan för att besöka deras profil!</p>
+                <div class="list-group" id="list-tab" role="tablist"></div>
                 <ul class="ul" id="friendsList"></ul>
             </div>
-            <div class="column right">
+            <div class="col-md">
                 <h2>Vänförfrågningar</h2>
+                <p>Klicka på en användare i listan för att acceptera deras förfrågan!</p>
+                <div class="list-group" id="list-tab-req" role="tablist"></div>
                 <ul class="ul" id="reqsList"></ul>
             </div>
         </div>
+    </div>
     </body>
 </html>

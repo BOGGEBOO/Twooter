@@ -4,8 +4,19 @@
         <meta charset="UTF-8">
         <script type="text/javascript" src="./globals.js"></script>
         <script type="text/javascript" src="./search.js"></script>
+        <link rel="stylesheet" 
+            href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" 
+            integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" 
+            crossorigin="anonymous">
+        <link rel="stylesheet" href="./globals.css">
+        <link rel="stylesheet" href="./search.css">
     </head>
     <body>
+        <ul class="navBar">
+            <li><a href="profilePage.html" onclick="checkUser()">Start</a></li>
+            <li><a class="active" href="search.html">Sök</a></li>
+          </ul>
+          <div class="body">
         <h1>Search</h1>
 
         <label for="username"> Användarnamn </label>
@@ -20,8 +31,10 @@
         <input type="submit"
                    value="sök"
                    onclick="findUsers()">
+        <p>Klicka på en profil för att skicka en vänförfrågan</p>
 
-        <ul id="searchList"></ul>
-
+        <div class="list-group" id="list-tab" role="tablist"></div>
+        <ul class="list-group list-group-flush" id="searchList"></ul>
+    </div>
     </body>
 </html>

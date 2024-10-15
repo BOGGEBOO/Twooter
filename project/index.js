@@ -69,6 +69,14 @@ async function logIn(newUser) {
         // felmeddelande
         // om login: fel användarnamn/lösenord
         // om signin: användarnamnet finns redan
+        let errMess = ""
+        if(newUser) {
+            errMess = "Användaren finns redan. Försök igen!"
+        }
+        else {
+            errMess = "Felaktiga inloggningsuppgifter. Försök igen!"
+        }
+        document.getElementById('errorMessage').innerHTML = errMess
     }
     else {
         currentUser = username

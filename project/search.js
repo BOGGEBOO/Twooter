@@ -18,9 +18,11 @@ async function acceptReq(user) {
 }
 
 async function findUsers() {
-    let searchList = document.getElementById('searchList')
-    while (searchList.firstChild){
-        searchList.removeChild(searchList.firstChild)
+    let searchList = document.getElementById('list-tab')
+    let child = searchList.lastElementChild
+    while (child){
+        searchList.removeChild(child)
+        child = searchList.lastElementChild
     }
     let userName = document.getElementById('username').value
     let response = await getFuncData(userName, 'findUsers')
